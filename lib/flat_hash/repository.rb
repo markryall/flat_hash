@@ -1,5 +1,5 @@
 module FlatHash
-  class FlatHash::Vcs
+  class Vcs
     attr_reader :type
     
     def sh command
@@ -10,7 +10,7 @@ module FlatHash
     end
   end
 
-  class FlatHash::Git < FlatHash::Vcs
+  class Git < Vcs
     def initialize
       @type = :git
     end
@@ -20,7 +20,7 @@ module FlatHash
     end
   end
 
-  class FlatHash::Hg < FlatHash::Vcs
+  class Hg < Vcs
     def initialize
       @type = :hg
     end
@@ -30,11 +30,12 @@ module FlatHash
     end
   end
 
-  class FlatHash::Repository < FlatHash::Directory
+  class Repository < Directory
     def initialize name
       super
-      @vcs = FlatHash::Git.new if File.exist?('.git')
-      @vcs = FlatHash::Hg.new if File.exist?('.hg')
+      system 'ls'
+      @vcs = Git.new if File.exist?('.git')
+      @vcs = Hg.new if File.exist?('.hg')
       raise "could not determine repository type" unless @vcs
     end
 
