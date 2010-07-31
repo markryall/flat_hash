@@ -8,17 +8,17 @@ describe FlatHash::Repository do
   end
 end
 
-describe FlatHash::Repository, 'git' do
+shared_examples_for "a repository" do
   it "should detect git repository" do
-    in_vcs_repository(Git.new) do |vcs|
+    in_vcs_repository(vcs_class.new) do |vcs|
       with_repository do |repository|
-        repository.type.should == :git
+        repository.type.should == vcs_class.new.name
       end
     end
   end
 
   it 'should enumerate the revisions' do
-    in_vcs_repository(Git.new) do |vcs|
+    in_vcs_repository(vcs_class.new) do |vcs|
       with_repository do |repository|
         repository['entry1'] = {'key' => 'value'}
         vcs.addremovecommit 'first commit'
@@ -29,29 +29,21 @@ describe FlatHash::Repository, 'git' do
 
   it 'should detect additions'
   it 'should detect deletions'
-  it 'should detect modifications'  
+  it 'should detect modifications'
+end
+
+describe FlatHash::Repository, 'git' do
+  it_should_behave_like "a repository"
+
+  def vcs_class
+    Git
+  end
 end
 
 describe FlatHash::Repository, 'hg' do
-  it "should detect hg repository" do
-    in_vcs_repository(Hg.new) do |vcs|
-      with_repository do |repository|
-        repository.type.should == :hg
-      end
-    end
-  end
+  it_should_behave_like "a repository"
 
-  it 'should enumerate the revisions' do
-    in_vcs_repository(Hg.new) do |vcs|
-      with_repository do |repository|
-        repository['key'] = {'key1' => 'value1'}
-        vcs.addremovecommit 'first commit'
-        repository.history.size.should == 1
-      end
-    end
+  def vcs_class
+    Hg
   end
-
-  it 'should detect additions'
-  it 'should detect deletions'
-  it 'should detect modifications'
 end

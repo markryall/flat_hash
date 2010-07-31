@@ -53,7 +53,7 @@ end
 
 class Git < Vcs
   def name
-    "git"
+    :git
   end
 
   def addremovecommit comment
@@ -65,7 +65,7 @@ end
 
 class Hg < Vcs
   def name
-    "hg"
+    :hg
   end
 
   def addremovecommit comment
