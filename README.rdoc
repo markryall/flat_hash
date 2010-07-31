@@ -1,0 +1,25 @@
+= Flat Hash
+
+Serialisation for hash instances.
+
+== Rationale
+
+It's a bit of a struggle to justify creating this gem.  It just encapsulates some functionality that i'd built twice in other gems (shh and cardigan).  In both cases, I wanted to be able to manage a collection of serialised hash instances on all platforms in a version control system.  I'd used yaml initially but found that serialising the same hash on windows vs linux would produced slight differences.
+
+At this stage, only the serialisation/deserialisation has been completed.
+
+It will also need to accomodate rewriting hashes that had been serialised as yaml.
+
+== Usage
+
+=== FlatHash::Serialiser
+
+This class is just used to read and write hashes from disk
+
+Reading:
+
+  hash = FlatHash::Serialiser.new(File.open('hash)).read
+
+Writing:
+
+  FlatHash::Serialiser.new(File.open('hash', 'w')).write(hash)

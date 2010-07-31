@@ -1,0 +1,1 @@
+require 'flat_hash/serialiser'
