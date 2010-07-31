@@ -1,6 +1,4 @@
-$: << File.dirname(__FILE__)+'/../lib'
-
-require 'flat_hash'
+require File.dirname(__FILE__)+'/spec_helper'
 
 describe FlatHash::Serialiser, '#read' do
   before do
