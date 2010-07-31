@@ -17,19 +17,40 @@ shared_examples_for "a repository" do
     end
   end
 
-  it 'should enumerate the revisions' do
+  it 'should detect additions' do
     in_vcs_working_directory do |vcs|
       with_repository do |repository|
-        repository['entry1'] = {'key' => 'value'}
+        repository['entry'] = {'key' => 'value'}
         vcs.addremovecommit 'first commit'
         repository.history.size.should == 1
       end
     end
   end
 
-  it 'should detect additions'
-  it 'should detect deletions'
-  it 'should detect modifications'
+  it 'should detect deletions' do
+    in_vcs_working_directory do |vcs|
+      with_repository do |repository|
+        repository['entry'] = {'key' => 'value'}
+        vcs.addremovecommit 'first commit'
+        repository.destroy 'entry'
+        vcs.addremovecommit 'next commit'
+        repository.history.size.should == 2
+      end
+    end
+  end
+
+  it 'should detect modifications' do
+    in_vcs_working_directory do |vcs|
+      with_repository do |repository|
+        repository['entry'] = {'key' => 'value'}
+        vcs.addremovecommit 'first commit'
+        repository['entry'] = {'key' => 'value2'}
+        vcs.addremovecommit 'next commit'
+        repository.history.size.should == 2
+      end
+    end
+  end
+
 end
 
 describe FlatHash::Repository, 'git' do
