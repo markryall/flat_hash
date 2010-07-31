@@ -1,0 +1,4 @@
+changeset = "<cs node="{node}" rev="{rev}" time="{date|date}" author="{author|escape}">\n  <desc>{desc|escape}</desc>\n  <adds>{file_adds}\n  </adds>\n  <dels>{file_dels}\n  </dels>\n  <all>{files}\n  </all>\n</cs>\n"
+file = "\n    <file>{file|escape}</file>"
+file_add = "\n    <file>{file_add|escape}</file>"
+file_del = "\n    <file>{file_del|escape}</file>"

@@ -30,11 +30,19 @@ shared_examples_for "a repository" do
   it 'should detect deletions' do
     in_vcs_working_directory do |vcs|
       with_repository do |repository|
-        repository['entry'] = {'key' => 'value'}
-        vcs.addremovecommit 'first commit'
-        repository.destroy 'entry'
-        vcs.addremovecommit 'next commit'
-        repository.history.size.should == 2
+        repository['entry1'] = {'key' => 'value'}
+        vcs.addremovecommit 'added entry1'
+
+        repository['entry2'] = {'key' => 'value'}
+        vcs.addremovecommit 'added entry2'
+
+        repository['entry1'] = {'key' => 'a different value'}
+        vcs.addremovecommit 'updated entry1'
+
+        repository.destroy 'entry1'
+        vcs.addremovecommit 'removed entry1'
+
+        repository.history.size.should == 4
       end
     end
   end

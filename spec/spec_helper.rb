@@ -18,8 +18,9 @@ def in_temp_directory
 end
 
 def sh command, options={}
-  IO.popen("#{command} 2>&1") {|io| io.each {|l| puts l if options[:verbose] } }
-  raise "process failed with status #{$?}" unless $?.success?
+  lines=[]
+  IO.popen("#{command} 2>&1") {|io| io.each {|l| lines << l.chomp } }
+  raise "\"#{command}\" failed with status #{$?}: #{lines.join("\n")}" unless $?.success?
 end
 
 def in_vcs_working_directory
