@@ -10,23 +10,15 @@ end
 
 shared_examples_for "a repository" do
   it "should have an initially empty history" do
-    in_vcs_repository(vcs_class.new) do |vcs|
+    in_vcs_working_directory do |vcs|
       with_repository do |repository|
         repository.history.should == []
       end
     end
   end
 
-  it "should detect repository type" do
-    in_vcs_repository(vcs_class.new) do |vcs|
-      with_repository do |repository|
-        repository.type.should == vcs_class.new.name
-      end
-    end
-  end
-
   it 'should enumerate the revisions' do
-    in_vcs_repository(vcs_class.new) do |vcs|
+    in_vcs_working_directory do |vcs|
       with_repository do |repository|
         repository['entry1'] = {'key' => 'value'}
         vcs.addremovecommit 'first commit'

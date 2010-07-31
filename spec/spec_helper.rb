@@ -22,7 +22,8 @@ def sh command, options={}
   raise "process failed with status #{$?}" unless $?.success?
 end
 
-def in_vcs_repository vcs
+def in_vcs_working_directory
+  vcs = vcs_class.new
   in_temp_directory do
     vcs.init
     yield vcs
