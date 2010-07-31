@@ -1,10 +1,6 @@
 require File.dirname(__FILE__)+'/spec_helper'
 
 describe FlatHash::Directory do
-  def with_directory
-    yield FlatHash::Directory.new('.cards')
-  end
-
   before do
     @hash = {'key1'=>'value1', 'key2'=>'value2'}
     @key = 'somekey'
@@ -45,6 +41,18 @@ describe FlatHash::Directory do
       end
       with_directory do |directory|
         directory[@key].should == @hash
+      end
+    end
+  end
+  
+  it "should allow entries to be destroyed" do
+    in_temp_directory do
+      with_directory do |directory|
+        directory.entries.should == []
+        directory << FlatHash::Entry.new(@key, @hash)
+        directory[@key].should == @hash
+        directory.destroy(@key)
+        directory.entries.should == []
       end
     end
   end

@@ -17,6 +17,10 @@ class FlatHash::Directory
     end
   end
 
+  def destroy key
+    FileUtils.rm(File.join(@path,key))
+  end
+
   def << entry
     write entry.name, entry.content
   end
