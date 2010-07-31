@@ -21,28 +21,20 @@ class FlatHash::Directory
     write entry.name, entry.content
   end
 
-  def []= key, hash
-    write key, hash
-  end
-
-  def [] key
-    read key
-  end
-
   def read key
-    File.open(path(key)) do |file|
-      FlatHash::Serialiser.new(file).read
-    end
+    open_serialiser(key) { |serialiser| serialiser.read }
   end
+
+  alias :[] :read
 
   def write key, hash
     FileUtils.mkdir_p @path
-    File.open(path(key),'w') do |file|
-      FlatHash::Serialiser.new(file).write(hash)
-    end
+    open_serialiser(key,'w') { |serialiser| serialiser.write hash }
   end
+
+  alias :[]= :write
 private
-  def path key
-    File.join(@path,key)
+  def open_serialiser key, mode='r'
+    File.open(File.join(@path,key),mode) { |file| yield FlatHash::Serialiser.new file }
   end
 end
