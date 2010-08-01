@@ -17,7 +17,8 @@ class FlatHash::Hg < FlatHash::Vcs
 
   def changeset id
     change = FlatHash::Changeset.new
-    lines = files_changed(id)
+    style = File.join(File.dirname(__FILE__), 'delta.hg')
+    lines = sh("hg log --style \"#{style}\" -r #{id} --removed")
     change.id = lines.shift
     change.time = lines.shift
     change.author = lines.shift
@@ -32,11 +33,6 @@ class FlatHash::Hg < FlatHash::Vcs
 
   def content_at path, commit
     sh("hg cat -r #{commit} #{path}").join("\n")
-  end
-
-  def files_changed commit
-    style = File.join(File.dirname(__FILE__), 'delta.hg')
-    sh("hg log --style \"#{style}\" -r #{commit} --removed")
   end
 private
   def read_until lines, end_line

@@ -10,7 +10,6 @@ module FlatHash
 
     def initialize name
       super
-      system 'ls'
       @vcs = Git.new if File.exist?('.git')
       @vcs = Hg.new if File.exist?('.hg')
       raise "could not determine repository type" unless @vcs
