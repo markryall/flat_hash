@@ -17,13 +17,12 @@ class FlatHash::Git < FlatHash::Vcs
     commit comment
   end
 
-  def history *path
+  def changesets *path
     sh("git log --format=%H -- #{File.join(*path)}") do |status, lines|
       raise "failed with status #{status}:\n#{lines.join("\n")}" unless status.exitstatus == 128
       []
     end
   end
-  alias :changesets :history
 
   def changeset id
     change = FlatHash::Changeset.new
@@ -40,10 +39,9 @@ class FlatHash::Git < FlatHash::Vcs
     change
   end
 
-  def entry_at path, commit
+  def content_at path, commit
     sh("git show #{commit}:#{path}").join("\n")
   end
-  alias :content_at :entry_at
 
   def files_changed commit
     sh("git show --pretty=\"format:\" --name-only #{commit}")

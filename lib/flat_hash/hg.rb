@@ -11,10 +11,9 @@ class FlatHash::Hg < FlatHash::Vcs
     commit comment
   end
 
-  def history *path
+  def changesets *path
     sh("hg log --removed --template \"{node}\\n\" #{File.join(*path)}")
   end
-  alias :changesets :history
 
   def changeset id
     change = FlatHash::Changeset.new
@@ -31,10 +30,9 @@ class FlatHash::Hg < FlatHash::Vcs
     change
   end
 
-  def entry_at path, commit
+  def content_at path, commit
     sh("hg cat -r #{commit} #{path}").join("\n")
   end
-  alias :content_at :entry_at
 
   def files_changed commit
     style = File.join(File.dirname(__FILE__), 'delta.hg')
