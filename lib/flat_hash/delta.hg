@@ -1,4 +1,4 @@
-changeset = "{rev}:{node}\ntime={date|date}\nauthor={author}\ndesc:\n{desc|escape}\nadditions:{file_adds}\ndeletions:{file_dels}\nall:{files}\n\n"
+changeset = "{rev}:{node}\n{date|date}\n{author}{files}\nadditions:{file_adds}\ndeletions:{file_dels}\ndescription:\n{desc|escape}\n"
 file = "\n{file|escape}"
 file_add = "\n{file_add|escape}"
 file_del = "\n{file_del|escape}"

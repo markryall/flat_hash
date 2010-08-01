@@ -39,6 +39,14 @@ def with_repository
   yield FlatHash::Repository.new('.cards')
 end
 
+def write path, content
+  File.open(path, 'w') {|file| file.puts content}
+end
+
+def delete path
+  FileUtils.rm(path)
+end
+
 class Vcs
   def init
     execute "init"
