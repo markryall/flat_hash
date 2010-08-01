@@ -65,7 +65,7 @@ describe FlatHash::Repository, 'git' do
   it_should_behave_like "a repository"
 
   def vcs_class
-    Git
+    FlatHash::Git
   end
 end
 
@@ -73,6 +73,6 @@ describe FlatHash::Repository, 'hg' do
   it_should_behave_like "a repository"
 
   def vcs_class
-    Hg
+    FlatHash::Hg
   end
 end
