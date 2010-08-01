@@ -1,21 +1,25 @@
 require 'flat_hash/vcs'
-
-Changeset = Struct.new :id, :revision, :time, :author, :modifications, :additions, :deletions, :description
+require 'flat_hash/changeset'
 
 class FlatHash::Hg < FlatHash::Vcs
-  def history path=''
-    sh("hg log --removed --template \"{node}\\n\" #{path}")
+  def name
+    :hg
+  end
+
+  def addremovecommit comment
+    sh "hg addremove"
+    commit comment
+  end
+
+  def history *path
+    sh("hg log --removed --template \"{node}\\n\" #{File.join(*path)}")
   end
   alias :changesets :history
 
   def changeset id
-    change = Changeset.new
+    change = FlatHash::Changeset.new
     lines = files_changed(id)
-    idrevline = lines.shift
-    if idrevline =~ /(.+):(.+)/
-      change.revision = $1.to_i
-      change.id = $2
-    end
+    change.id = lines.shift
     change.time = lines.shift
     change.author = lines.shift
     change.modifications = read_until(lines, 'additions:')
@@ -30,6 +34,7 @@ class FlatHash::Hg < FlatHash::Vcs
   def entry_at path, commit
     sh("hg cat -r #{commit} #{path}").join("\n")
   end
+  alias :content_at :entry_at
 
   def files_changed commit
     style = File.join(File.dirname(__FILE__), 'delta.hg')
