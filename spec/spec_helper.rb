@@ -39,10 +39,12 @@ def with_repository
   yield FlatHash::Repository.new('.cards')
 end
 
-def write path, content
+def write content, *paths
+  path = File.join(*paths)
+  FileUtils.mkdir_p File.dirname(path)
   File.open(path, 'w') {|file| file.puts content}
 end
 
-def delete path
-  FileUtils.rm(path)
+def delete *paths
+  FileUtils.rm(File.join(*paths))
 end

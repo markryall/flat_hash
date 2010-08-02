@@ -9,7 +9,7 @@ shared_examples_for "a vcs" do
 
   it "should retrieve single changeset" do
     in_vcs_working_directory do |vcs|
-      write 'file1', 'some content'
+      write 'some content', 'file1'
       vcs.addremovecommit 'first commit'
       vcs.changesets.size.should == 1
     end
@@ -17,15 +17,15 @@ shared_examples_for "a vcs" do
 
   it "should retrieve details of each changeset" do
     in_vcs_working_directory do |vcs|
-      write 'file1', 'some content'
-      write 'file2', 'some different content'
+      write 'some content', 'file1'
+      write 'some different content', 'file2'
       vcs.addremovecommit 'added file1 and file2'
 
-      write 'file1', 'some new content'
+      write 'some new content', 'file1'
       delete 'file2'
       vcs.addremovecommit 'modified file1 and removed file2'
 
-      write 'file2', 'some recreated content'
+      write 'some recreated content', 'file2'
       vcs.addremovecommit 'recreated file2'
 
       third, second, first = vcs.changesets
@@ -60,6 +60,16 @@ shared_examples_for "a vcs" do
       end
       vcs.files_at(third).should == ['file1', 'file2']
       vcs.content_at('file2', third).should == 'some recreated content'
+    end
+  end
+
+  it 'should handle retrieving files at any directory depth' do
+    in_vcs_working_directory do |vcs|
+      write 'some content', 'a', 'b', 'c', 'file1'
+      vcs.addremovecommit 'added file1 and file2'
+      changeset = vcs.changesets.first
+      vcs.files_at(changeset, 'a/b/c/d').should == []
+      vcs.files_at(changeset, 'a/b/c').should == ['a/b/c/file1']
     end
   end
 end

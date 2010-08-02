@@ -51,10 +51,16 @@ class FlatHash::Git < FlatHash::Vcs
     execute("show #{commit}:#{path}").join("\n")
   end
 
-  def files_at commit
-    git.commit(commit).tree.blobs.map {|blob| blob.name }
+  def files_at commit, path=nil
+    tree = git.commit(commit).tree
+    tree = tree/path if path
+    tree ? tree.blobs.map {|blob| path ? "#{path}/#{blob.name}" : blob.name } : []
   end
 
+  def contains? id, path
+    commit_contains git.commit(id), path
+  end
+private
   def commit_contains commit, path
     commit.tree/path
   end

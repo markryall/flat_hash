@@ -35,8 +35,11 @@ class FlatHash::Hg < FlatHash::Vcs
     execute("cat -r #{commit} #{path}").join("\n")
   end
 
-  def files_at commit
-    execute "locate -r #{commit} *"
+  def files_at commit, path='.'
+    sh "hg locate -r #{commit} '#{path}/*'" do |status, lines|
+      raise "failed with status #{status.exitstatus}:\n#{lines.join("\n")}" unless status.exitstatus == 1
+      []
+    end
   end
 private
   def read_until lines, end_line
