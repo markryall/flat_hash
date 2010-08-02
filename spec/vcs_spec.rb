@@ -60,6 +60,9 @@ shared_examples_for "a vcs" do
       end
       vcs.files_at(third).should == ['file1', 'file2']
       vcs.content_at('file2', third).should == 'some recreated content'
+      
+      vcs.changesets('file1').should == [second, first]
+      vcs.changesets('file2').should == [third, second, first]
     end
   end
 

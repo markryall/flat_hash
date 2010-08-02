@@ -11,8 +11,8 @@ class FlatHash::Hg < FlatHash::Vcs
     commit comment
   end
 
-  def changesets *path
-    execute "log --removed --template \"{node}\\n\" #{File.join(*path)}"
+  def changesets path='.'
+    execute "log --removed --template \"{node}\\n\" #{path}"
   end
 
   def changeset id

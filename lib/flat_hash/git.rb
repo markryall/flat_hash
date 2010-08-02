@@ -17,8 +17,8 @@ class FlatHash::Git < FlatHash::Vcs
     commit comment
   end
 
-  def changesets *path
-    sh("git log --format=%H -- #{File.join(*path)}") do |status, lines|
+  def changesets path='.'
+    sh("git log --format=%H -- #{path}") do |status, lines|
       raise "failed with status #{status}:\n#{lines.join("\n")}" unless status.exitstatus == 128
       []
     end
