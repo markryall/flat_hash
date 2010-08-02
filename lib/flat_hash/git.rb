@@ -12,8 +12,8 @@ class FlatHash::Git < FlatHash::Vcs
   end
 
   def addremovecommit comment
-    sh "git add -A"
-    sh "git ls-files --deleted -z | xargs -0 git rm"
+    execute "add -A"
+    execute "ls-files --deleted -z | xargs -0 git rm"
     commit comment
   end
 
@@ -30,20 +30,32 @@ class FlatHash::Git < FlatHash::Vcs
     change.id = commit.sha
     change.time = commit.date
     change.author = commit.author.to_s
-    #change.modifications = read_until(lines, 'additions:')
-    change.additions = commit.diffs.select {|diff| diff.new_file}.map {|diff| diff.a_path }
-    #change.deletions = read_until(lines, 'description:')
-    #change.modifications = change.modifications - change.additions
-    #change.modifications = change.modifications - change.deletions
+    all_changes = execute("show --pretty=\"format:\" --name-only #{commit}")
+    all_changes.shift
+    change.additions = commit.diffs.select {|diff| diff.new_file}.map {|diff| diff.a_path }.uniq
+    change.deletions = []
+    change.modifications = []
+    all_changes.each do |path|
+      if commit_contains(commit,path)
+        change.modifications << path
+      else
+        change.deletions << path
+      end
+    end
+    change.modifications = change.modifications - change.additions
     change.description = commit.message
     change
   end
 
   def content_at path, commit
-    sh("git show #{commit}:#{path}").join("\n")
+    execute("show #{commit}:#{path}").join("\n")
   end
 
-  def files_changed commit
-    sh("git show --pretty=\"format:\" --name-only #{commit}")
+  def files_at commit
+    git.commit(commit).tree.blobs.map {|blob| blob.name }
+  end
+
+  def commit_contains commit, path
+    commit.tree/path
   end
 end

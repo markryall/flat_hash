@@ -35,8 +35,8 @@ class FlatHash::Hg < FlatHash::Vcs
     execute("cat -r #{commit} #{path}").join("\n")
   end
 
-  def files_at pattern, commit
-    execute "locate -r #{commit} #{pattern}"
+  def files_at commit
+    execute "locate -r #{commit} *"
   end
 private
   def read_until lines, end_line
