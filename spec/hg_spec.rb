@@ -31,7 +31,10 @@ describe FlatHash::Hg do
       delete 'file2'
       vcs.addremovecommit 'modified file1 and removed file2'
 
-      second, first = vcs.changesets
+      write 'file2', 'some recreated content'
+      vcs.addremovecommit 'recreated file2'
+
+      third, second, first = vcs.changesets
 
       vcs.changeset(first).instance_eval do
         id.should == first
@@ -40,6 +43,7 @@ describe FlatHash::Hg do
         modifications.should == []
         description.should == 'added file1 and file2'
       end
+      vcs.files_at('*', first).should == ['file1', 'file2']
       vcs.content_at('file1',first).should == 'some content'
       vcs.content_at('file2',first).should == 'some different content'
 
@@ -50,7 +54,18 @@ describe FlatHash::Hg do
         modifications.should == ['file1']
         description.should == 'modified file1 and removed file2'
       end
+      vcs.files_at('*', second).should == ['file1']
       vcs.content_at('file1',second).should == 'some new content'
+
+      vcs.changeset(third).instance_eval do
+        id.should == third
+        additions.should == ['file2']
+        deletions.should == []
+        modifications.should == []
+        description.should == 'recreated file2'
+      end
+      vcs.files_at('*', third).should == ['file1', 'file2']
+      vcs.content_at('file2', third).should == 'some recreated content'
     end
   end
 end

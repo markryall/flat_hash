@@ -31,7 +31,7 @@ class FlatHash::Git < FlatHash::Vcs
     change.time = commit.date
     change.author = commit.author.to_s
     #change.modifications = read_until(lines, 'additions:')
-    #change.additions = read_until(lines, 'deletions:')
+    change.additions = commit.diffs.select {|diff| diff.new_file}.map {|diff| diff.a_path }
     #change.deletions = read_until(lines, 'description:')
     #change.modifications = change.modifications - change.additions
     #change.modifications = change.modifications - change.deletions

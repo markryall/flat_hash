@@ -35,7 +35,7 @@ describe FlatHash::Hg do
 
       vcs.changeset(first).instance_eval do
         id.should == first
-        # additions.should == ['file1', 'file2']
+        additions.should == ['file1', 'file2']
         # deletions.should == []
         # modifications.should == []
         description.should == 'added file1 and file2'

@@ -7,12 +7,12 @@ class FlatHash::Hg < FlatHash::Vcs
   end
 
   def addremovecommit comment
-    sh "hg addremove"
+    execute "addremove"
     commit comment
   end
 
   def changesets *path
-    sh("hg log --removed --template \"{node}\\n\" #{File.join(*path)}")
+    execute "log --removed --template \"{node}\\n\" #{File.join(*path)}"
   end
 
   def changeset id
@@ -32,7 +32,11 @@ class FlatHash::Hg < FlatHash::Vcs
   end
 
   def content_at path, commit
-    sh("hg cat -r #{commit} #{path}").join("\n")
+    execute("cat -r #{commit} #{path}").join("\n")
+  end
+
+  def files_at pattern, commit
+    execute "locate -r #{commit} #{pattern}"
   end
 private
   def read_until lines, end_line
