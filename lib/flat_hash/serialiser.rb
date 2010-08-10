@@ -7,9 +7,13 @@ class FlatHash::Serialiser
 
   def read
     hash = {}
+    first = true
     key, value = nil, ''
     @io.each do |line|
       line.chomp!
+      if first
+        return read_as_yaml(line) if line =~ /^--- /
+      end
       if key
         if line == '<----->'
           hash[key] = value
@@ -34,5 +38,18 @@ class FlatHash::Serialiser
       @io.puts hash[key]
       first = false
     end
+  end
+private
+  def read_as_yaml line
+    sio = StringIO.new(line)
+    @io.each { |line| sio.puts line.chomp }
+    hash = YAML::load(sio.string)
+    hash['table'].instance_of?(Hash) ? convert_keys(hash['table']) : hash
+  end
+
+  def convert_keys hash
+    converted = {}
+    hash.keys.each {|k| converted[k.to_s] = hash[k]}
+    converted
   end
 end
