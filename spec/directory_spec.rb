@@ -23,6 +23,17 @@ describe FlatHash::Directory do
     end
   end
 
+  it "should add id to hash" do
+    in_temp_directory do
+      with_directory do |directory|
+        directory[@key] = @hash
+      end
+      with_directory do |directory|
+        directory[@key].id.should == @key
+      end
+    end
+  end
+
   it "should expose indexers" do
     in_temp_directory do
       with_directory do |directory|
