@@ -1,3 +1,5 @@
+Gem::Specification.load('gemspec').dependencies.each { |dep| gem dep.name, dep.requirement }
+
 $: << File.dirname(__FILE__)+'/../lib'
 require 'flat_hash'
 require 'tempfile'

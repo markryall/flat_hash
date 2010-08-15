@@ -11,9 +11,8 @@ class FlatHash::Serialiser
     key, value = nil, ''
     @io.each do |line|
       line.chomp!
-      if first
-        return read_as_yaml(line) if line =~ /^--- /
-      end
+      return read_as_yaml(line) if first and line =~ /^--- /
+      first = false
       if key
         if line == '<----->'
           hash[key] = value
