@@ -18,7 +18,7 @@ describe FlatHash::Directory do
     in_temp_directory do
       with_directory do |directory|
         directory[@key] = @hash
-        directory.entries.should == [@key]
+        directory.entries.should == [@hash]
       end
     end
   end

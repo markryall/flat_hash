@@ -23,7 +23,7 @@ class FlatHash::Directory
     return unless File.exist?(@path)
     Dir.foreach(@path) do |path|
       basename = File.basename(path)
-      yield basename unless ['.','..'].include?(basename)
+      yield self[basename] unless ['.','..'].include?(basename)
     end
   end
 

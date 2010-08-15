@@ -1,9 +1,9 @@
 Gem::Specification.new do |spec|
   spec.name = 'flat_hash'
-  spec.version = '0.0.1'
+  spec.version = '0.0.2'
   spec.summary = "trivial but predictable serialisation for hashes"
   spec.description = <<-EOF
-Hash serialisation that writes key/value pairs in a predicatable order
+Hash serialisation that writes key/value pairs in a predictable order
 EOF
 
   spec.authors << 'Mark Ryall'
