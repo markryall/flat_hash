@@ -1,18 +1,13 @@
 module FlatHash; end
 
 class FlatHash::Serialiser
-  def initialize io, filter=nil
-    @io, @filter = io, filter
-  end
-
-  def read
-    io = @filter ? @filter.read(@io) : @io
+  def read io
     hash = {}
     first = true
     key, value = nil, ''
     io.each do |line|
       line.chomp!
-      return read_as_yaml(line) if first and line =~ /^--- /
+      return read_as_yaml(io, line) if first and line =~ /^--- /
       first = false
       if key
         if line == '<----->'
@@ -30,8 +25,7 @@ class FlatHash::Serialiser
     hash
   end
 
-  def write hash
-    io = @filter ? StringIO.new : @io
+  def write io, hash
     first = true
     hash.keys.sort.each do |key|
       io.puts '<----->' unless first
@@ -39,12 +33,11 @@ class FlatHash::Serialiser
       io.puts hash[key]
       first = false
     end
-    @filter.write(io.string, @io) if @filter
   end
 private
-  def read_as_yaml line
+  def read_as_yaml io, line
     sio = StringIO.new(line)
-    @io.each { |line| sio.puts line.chomp }
+    io.each { |line| sio.puts line.chomp }
     hash = YAML::load(sio.string)
     hash['table'].instance_of?(Hash) ? convert_keys(hash['table']) : hash
   end

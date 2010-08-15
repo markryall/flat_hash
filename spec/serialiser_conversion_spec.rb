@@ -4,13 +4,11 @@ require 'flat_hash/serialiser'
 
 describe FlatHash::Serialiser, '#yaml' do
   before do
-    @io = StringIO.new
-    @serialiser = FlatHash::Serialiser.new(@io)    
+    @serialiser = FlatHash::Serialiser.new   
   end
 
   def read string
-    @io.string = string
-    @serialiser.read
+    @serialiser.read StringIO.new(string)
   end
 
   it "should detect and deserialise yaml persisted hash" do

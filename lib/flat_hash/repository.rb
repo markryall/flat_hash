@@ -8,7 +8,7 @@ module FlatHash
     extend Forwardable
     def_delegators :@vcs, :changesets
 
-    def initialize name
+    def initialize serialiser, path
       super
       @vcs = Git.new if File.exist?('.git')
       @vcs = Hg.new if File.exist?('.hg')

@@ -15,8 +15,8 @@ end
 class FlatHash::Directory
   include Enumerable
 
-  def initialize path
-    @path = path
+  def initialize serialiser, path
+    @serialiser, @path = serialiser, path
   end
 
   def each
@@ -36,22 +36,18 @@ class FlatHash::Directory
   end
 
   def read key
-    open_serialiser(key) { |serialiser| add_key(serialiser.read, key) }
+    File.open(File.join(@path,key)) {|io| add_key(@serialiser.read(io), key) }
   end
 
   alias :[] :read
 
   def write key, hash
     FileUtils.mkdir_p @path
-    open_serialiser(key,'w') { |serialiser| serialiser.write hash }
+    File.open(File.join(@path,key),'w') {|io| @serialiser.write io, hash }
   end
 
   alias :[]= :write
 private
-  def open_serialiser key, mode='r'
-    File.open(File.join(@path,key),mode) { |file| yield FlatHash::Serialiser.new(file) }
-  end
-
   def add_key hash, key
     hash.meta_eval {
       define_method(:id) { key }

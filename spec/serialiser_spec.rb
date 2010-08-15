@@ -2,13 +2,11 @@ require File.dirname(__FILE__)+'/spec_helper'
 
 describe FlatHash::Serialiser, '#read' do
   before do
-    @io = StringIO.new
-    @serialiser = FlatHash::Serialiser.new(@io)    
+    @serialiser = FlatHash::Serialiser.new    
   end
 
   def read string
-    @io.string = string
-    @serialiser.read
+    @serialiser.read StringIO.new(string)
   end
 
   it "should read an empty hash when stream is empty" do
@@ -51,14 +49,14 @@ end
 
 describe FlatHash::Serialiser, '#write' do
   before do
-    @io = StringIO.new
-    @serialiser = FlatHash::Serialiser.new(@io)    
+    @serialiser = FlatHash::Serialiser.new   
   end
   
   def write hash
-    @serialiser.write(hash)
-    @io.flush
-    @io.string
+    io = StringIO.new
+    @serialiser.write(io, hash)
+    io.flush
+    io.string
   end
 
   it 'should output empty string ' do

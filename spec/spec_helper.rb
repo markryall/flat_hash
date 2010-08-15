@@ -34,11 +34,11 @@ def in_vcs_working_directory
 end
 
 def with_directory
-  yield FlatHash::Directory.new('.cards')
+  yield FlatHash::Directory.new(FlatHash::Serialiser.new, '.cards')
 end
 
 def with_repository
-  yield FlatHash::Repository.new('.cards')
+  yield FlatHash::Repository.new(FlatHash::Serialiser.new, '.cards')
 end
 
 def write content, *paths
