@@ -5,7 +5,7 @@ require 'flat_hash/hg'
 
 class FlatHash::Repository < FlatHash::Directory
   extend Forwardable
-  def_delegators :@vcs, :changesets
+  def_delegators :@vcs, :changesets, :addremovecommit
 
   def initialize serialiser, path
     super
