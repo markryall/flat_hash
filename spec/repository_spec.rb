@@ -3,7 +3,9 @@ require File.dirname(__FILE__)+'/spec_helper'
 describe FlatHash::Repository do
   it "should raise exception when no vcs repository is detected" do
     in_temp_directory do
-      lambda { with_repository }.should raise_exception(RuntimeError, 'could not determine repository type')
+      with_repository do |repository|
+        repository.should_not be_vcs_supported
+      end
     end
   end
 end

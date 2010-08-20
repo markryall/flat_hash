@@ -1,3 +1,5 @@
+require 'yaml'
+
 module FlatHash; end
 
 class FlatHash::Serialiser
