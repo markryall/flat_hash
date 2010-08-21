@@ -35,6 +35,10 @@ class FlatHash::Directory
     write entry.name, entry.content
   end
 
+  def exist? key
+    File.exist?(File.join(@path,key))
+  end
+
   def read key
     File.open(File.join(@path,key)) {|io| add_key(@serialiser.read(io), key) }
   end
