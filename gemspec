@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name = 'flat_hash'
-  spec.version = '0.0.2'
+  spec.version = '0.0.3'
   spec.summary = "trivial but predictable serialisation for hashes"
   spec.description = <<-EOF
 Hash serialisation that writes key/value pairs in a predictable order
