@@ -1,6 +1,6 @@
-require File.dirname(__FILE__)+'/spec_helper'
+puts 'loading'
 
-shared_examples_for "a vcs" do
+shared_examples_for "a vcs wrapper" do
   it "should initially have no changesets" do
     in_vcs_working_directory do |vcs|
       vcs.changesets.size.should == 0
