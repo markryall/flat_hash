@@ -10,7 +10,7 @@ EOF
   spec.email = 'mark@ryall.name'
   spec.homepage = 'http://github.com/markryall/flat_hash'
  
-  spec.files = Dir['lib/**/*'] + Dir['spec/**/*'] + Dir['bin/*'] + ['README.rdoc', 'MIT-LICENSE', 'HISTORY.rdoc', '.gemtest']
+  spec.files = Dir['lib/**/*'] + Dir['spec/**/*'] + Dir['bin/*'] + ['README.rdoc', 'MIT-LICENSE', 'HISTORY.rdoc', 'Rakefile', '.gemtest']
 
   spec.add_dependency 'grit', '~>2'
   
