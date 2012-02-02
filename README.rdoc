@@ -4,11 +4,14 @@ Serialisation for hash instances.
 
 == Rationale
 
-It's a bit of a struggle to justify creating this gem.  It just encapsulates some functionality that i'd built twice in other gems (shh and cardigan).  In both cases, I wanted to be able to manage a collection of serialised hash instances on all platforms in a version control system.  I'd used yaml initially but found that serialising the same hash on windows vs linux would produced slight differences.
+It's a bit of a struggle to justify creating this gem.  It just encapsulates some
+functionality that i'd built twice in other gems (shh and cardigan).  In both cases,
+I wanted to be able to manage a collection of serialised hash instances on all
+platforms in a version control system.  I'd used yaml initially but found that
+serialising the same hash on windows vs linux would produced slight differences.
 
-At this stage, only the serialisation/deserialisation has been completed.
-
-It will also need to accomodate rewriting hashes that had been serialised as yaml.
+It serialises hashes that must contain only string keys and string values.  It
+serialises to a human readable text file. The key must not contain a new line.
 
 == Usage
 
@@ -18,8 +21,36 @@ This class is just used to read and write hashes from disk
 
 Reading:
 
-  hash = FlatHash::Serialiser.new(File.open('hash)).read
+  File.open 'hash' do |in_io|
+    hash = FlatHash::Serialiser.new.read File.open('hash)
+  end
 
 Writing:
 
-  FlatHash::Serialiser.new(File.open('hash', 'w')).write(hash)
+  File.open 'hash', 'w' do |out_io|
+    FlatHash::Serialiser.new.write out_io, hash
+  end
+
+=== FlatHash::Directory
+
+This enables a collection of hashes to be managed in a directory (a pseudo
+database table). If the directory does not exist, it will be created with the
+first write.
+
+  serialiser = FlatHash::Serialiser.new 
+  directory = FlatHash::Directory serialiser, 'classes'
+  directory['cs101'] = {'name', 'computer science 101', 'lecturer': 'alan turing'}
+  directory['el101'] = {'name', 'english literature 101', 'lecturer': 'marcel proust'}
+  directory.each {|subject| p subject}
+
+=== FlatHash::Repository
+
+This is a FlatHash::Directory with some additional vcs capabilities. It will detect
+whether the directory is in a git or mercurial repository.  If a vcs is detected,
+it is possible to traverse the history for each hash.
+
+  serialiser = FlatHash::Serialiser.new 
+  repository = FlatHash::Repository serialiser, 'classes'
+  repository.history('el101').each do |changeset|
+    p repository.element_at changeset.id, 'el101'
+  end
